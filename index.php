@@ -3,25 +3,25 @@ session_start();
 
 require "connexion.php";
 /** Les variables contenant les infos entrées par l'utilisateur en POST */
-$photo = $_POST['photo'];
-$nom = $_POST['nom'];
-$postnom = $_POST['postnom'];
-$prenom = $_POST['prenom'];
-$sexe = $_POST['sexe'];
-$lieu = $_POST['lieu'];
-$date_de_naissance = $_POST['date'];
-$adresse = $_POST['residence'];
-$poste = $_POST['poste'];
-$email = $_POST['email'];
-$phone = $_POST['tel'];
+@$photo = $_POST['photo'];
+@$nom = $_POST['nom'];
+@$postnom = $_POST['postnom'];
+@$prenom = $_POST['prenom'];
+@$sexe = $_POST['sexe'];
+@$lieu = $_POST['lieu'];
+//$date_de_naissance = $_POST['date'];
+@$adresse = $_POST['residence'];
+@$poste = $_POST['poste'];
+@$email = $_POST['email'];
+@$phone = $_POST['tel'];
 
 /** Verifie si le boutton est cliqué */
 if (isset($_POST['button'])) {
     if (
-        /** Vérifie si les champs sont envpyés et qu'ils ne sont pas vides */
-        isset($photo, $nom, $postnom, $prenom, $sexe, $lieu, $date_de_naissance, $adresse, $poste, $email, $phone) &&
-        !empty($photo) && !empty($nom) && !empty($postnom) && !($prenom) && !empty($sexe) && !empty($lieu) && !empty($date_de_naissance)
-        && !empty($adresse) && !empty($poste) && !empty($email) && !empty($phone)
+        /** Vérifie si les champs sont envoyés et qu'ils ne sont pas vides */
+        isset($photo, $nom, $postnom, $prenom, $sexe, $lieu, /*$date_de_naissance,*/ $adresse, $poste, $email, $phone) && !empty($photo
+            && !empty($nom)) && !empty($postnom) && !empty($prenom) && !empty($sexe) && !empty($lieu) && /*!empty($date_de_naissance)
+        &&*/ !empty($adresse) && !empty($poste) && !empty($email) && !empty($phone)
     ) {
         /** Variable de session content les erreurs émises par l'utilisateur */
         $_SESSION['error'] = [];
@@ -46,25 +46,43 @@ if (isset($_POST['button'])) {
         /** Vérifie si la variable de session est vide on insere les données entrées  à l'aide de 
          * la requete INSERT */
         if ($_SESSION['error'] === []) {
-            $insert = "INSERT INTO `agents`(`Photo`, `Nom`, `Postnom`, `Prenom`, `Sexe`, `Lieu`, `Naissance`, `Adresse`,
-            `Poste`, `Email`, `Telephone`) VALUES(:Photo, :Nom, :Postnom, :Prenom, :Sexe, :Lieu, `:Naissance`, :Adresse, 
+            $insert = "INSERT INTO `agents`(`Photo`, `Nom`, `Postnom`, `Prenom`, `Sexe`, `Lieu`, /*`Naissance`,*/ `Adresse`,
+            `Poste`, `Email`, `Telephone`) VALUES(:Photo, :Nom, :Postnom, :Prenom, :Sexe, :Lieu, /*`:Naissance`,*/ :Adresse, 
             :Poste, :Email, :Telephone)";
 
             $prepare = $pdo->prepare($insert);
 
             $execute = $prepare->execute(array(
                 ":Photo" => $photo, ":Nom" => $nom, ":Postnom" => $postnom, ":Prenom" => $prenom,
-                ":Sexe" => $sexe, ":Lieu" => $lieu, ":Naissance" => $date_de_naissance, ":Adresse" => $adresse, ":Poste" => $poste, ":Email" => $email, ":Telephone" => $phone
+                ":Sexe" => $sexe, ":Lieu" => $lieu, /*":Naissance" => $date_de_naissance,*/ ":Adresse" => $adresse, ":Poste" => $poste, ":Email" => $email, ":Telephone" => $phone
             ));
+
+            /** la session agent pour stocker les infos de l'agent exploitable sur tout le site */
+
+            $_SESSION['agent'] = [
+                "photo" => $photo,
+                "nom" => $nom,
+                "postnom" => $postnom,
+                "prenom" => $prenom,
+                "sexe" => $sexe,
+                "lieu" => $lieu,
+                "adresse" => $adresse,
+                "poste" => $poste,
+                "email" => $email,
+                "telephone" => $phone,
+            ];
+
+            header("location: successSave.php");
         }
     } else {
         /** Si au moins un champs est vide on push la variable d'erreur */
         $_SESSION['error'] = ["Veillez remplir tous les champs Svp !"];
+        //die("au moins un champ est vide ou pas envoyé");
+
     }
 }
 
 ?>
-
 <?php require "header.php" ?>
 
 <div class="container">
@@ -99,7 +117,7 @@ if (isset($_POST['button'])) {
             <input type="text" class="form-control" id="prenom" name="prenom">
         </div>
         <label class="mb-3">Sexe</label>
-        <select class="mb-3 form-select" name="sexe" aria-label="Default select example">
+        <select class="mb-3 form-select" aria-label="Default select example" name="sexe">
             <option selected value="M">M</option>
             <option value="F">F</option>
         </select>
@@ -107,10 +125,12 @@ if (isset($_POST['button'])) {
             <label for="lieu" class="form-label">Lieu de Naissance</label>
             <input type="text" class="form-control" id="lieu" name="lieu">
         </div>
+        <!-- 
         <div class="mb-3">
             <label for="birthday" class="form-label">Date de Naissance</label>
             <input type="date" class="form-control" id="birthday" name="date">
         </div>
+        -->
         <div class="mb-3">
             <label for="adresse" class="form-label">Residence</label>
             <input type="text" class="form-control" id="adresse" name="residence">

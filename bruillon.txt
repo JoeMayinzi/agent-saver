@@ -1,0 +1,34 @@
+/** Variable de session content les erreurs émises par l'utilisateur */
+        $_SESSION['error'] = [];
+
+        /** Vérifie que l'email entré est invalide */
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+            /** Push la variable de session en cas d'erreur d'email */
+            $_SESSION['error'][] = "Adresse email invalide";
+        }
+
+        /** Requete SQL pour interroger la base de données sur la colone email */
+        $select = "SELECT * FROM `agents` WHERE `email` = '$email'";
+        $query = $pdo->query($select);
+        $agent = $query->fetch(PDO::FETCH_ASSOC);
+
+        /** Si l'email existe dèja dans la BDD on push la variable de session error */
+        if ($agent) {
+            $_SESSION['error'][] = "Cet agent a dèja été enregistré";
+        }
+
+        /** Vérifie si la variable de session est vide on insere les données entrées  à l'aide de 
+         * la requete INSERT */
+        if ($_SESSION['error'] === []) {
+            $insert = "INSERT INTO `agents`(`Photo`, `Nom`, `Postnom`, `Prenom`, `Sexe`, `Lieu`, `Naissance`, `Adresse`,
+            `Poste`, `Email`, `Telephone`) VALUES(:Photo, :Nom, :Postnom, :Prenom, :Sexe, :Lieu, `:Naissance`, :Adresse, 
+            :Poste, :Email, :Telephone)";
+
+            $prepare = $pdo->prepare($insert);
+
+            $execute = $prepare->execute(array(
+                ":Photo" => $photo, ":Nom" => $nom, ":Postnom" => $postnom, ":Prenom" => $prenom,
+                ":Sexe" => $sexe, ":Lieu" => $lieu, ":Naissance" => $date_de_naissance, ":Adresse" => $adresse, ":Poste" => $poste, ":Email" => $email, ":Telephone" => $phone
+            ));
+        }
