@@ -26,7 +26,10 @@
                         <a class="nav-link active" aria-current="page" href="index.php">Save</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link" href="./liste_agents.php">Liste des agents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./pdfliste_agents.php">telecharger la liste des agents</a>
                     </li>
                 </ul>
             </div>

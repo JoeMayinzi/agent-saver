@@ -60,7 +60,7 @@ if (isset($_POST['button'])) {
             /** la session agent pour stocker les infos de l'agent exploitable sur tout le site */
 
             $_SESSION['agent'] = [
-                "photo" => $photo,
+                "photo" => file_get_contents($photo, FILE_USE_INCLUDE_PATH),
                 "nom" => $nom,
                 "postnom" => $postnom,
                 "prenom" => $prenom,

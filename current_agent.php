@@ -28,7 +28,7 @@ if (!isset($_SESSION['agent'])) {
         <div class="container agent">
             <h1 class="mt-2">Fiche Agent</h1>
             <div class="current-agent_img">
-                <img src="" alt="">
+                <img src="<?= $_SESSION['agent']['photo'] ?> alt=">
             </div>
             <div class="row">
                 <div class="d-flex">
