@@ -1,26 +1,28 @@
 <?php
 
+// include autoloader
+require_once 'dompdf/autoload.inc.php';
 
-require_once "./dompdf/autoload.inc.php";
-
+// reference the Dompdf namespace
 use Dompdf\Dompdf;
-
 
 ob_start();
 
-require_once "pdfliste_agents.php";
+require_once "./liste_agents.php";
+$html = ob_get_contents();
 
-$html_list = ob_get_contents();
 ob_end_clean();
 
-
+// instantiate and use the dompdf class
 $dompdf = new Dompdf();
+$dompdf->loadHtml($html);
 
-$dompdf->loadHtml($html_list);
+// (Optional) Setup the paper size and orientation
+$dompdf->setPaper('A4', 'landscape');
 
-$dompdf->setPaper("A4", "portrait");
-
+// Render the HTML as PDF
 $dompdf->render();
 
-$file = "liste_agents.pdf";
-$dompdf->stream($file);
+// Output the generated PDF to Browser
+$file_name = "liste-agent";
+$dompdf->stream($file_name);
