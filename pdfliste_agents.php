@@ -5,6 +5,7 @@ require_once 'dompdf/autoload.inc.php';
 
 // reference the Dompdf namespace
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 ob_start();
 
@@ -14,7 +15,9 @@ $html = ob_get_contents();
 ob_end_clean();
 
 // instantiate and use the dompdf class
-$dompdf = new Dompdf();
+$options = new Options();
+$options->set("defaultFont", "Oswald");
+$dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 
 // (Optional) Setup the paper size and orientation
