@@ -1,5 +1,5 @@
 <?php
-session_start();
+@session_start();
 
 if (!isset($_SESSION['agent'])) {
     header("location: index.php");
@@ -23,13 +23,12 @@ if (!isset($_SESSION['agent'])) {
 
 <body>
     <?php
+    require "connexion.php";
+
     if (isset($_SESSION['agent'])) {
     ?>
         <div class="container agent">
             <h1 class="mt-2">Fiche Agent</h1>
-            <div class="current-agent_img">
-                <img src="<?= $_SESSION['agent']['photo'] ?> alt=">
-            </div>
             <div class="row">
                 <div class="d-flex">
                     <div>

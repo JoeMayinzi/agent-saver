@@ -3,7 +3,6 @@ session_start();
 
 require "connexion.php";
 /** Les variables contenant les infos entrées par l'utilisateur en POST */
-@$photo = $_POST['photo'];
 @$nom = $_POST['nom'];
 @$postnom = $_POST['postnom'];
 @$prenom = $_POST['prenom'];
@@ -15,14 +14,21 @@ require "connexion.php";
 @$email = $_POST['email'];
 @$phone = $_POST['tel'];
 
+echo "<pre>";
+var_dump($_POST);
+echo "</pre>";
+
 /** Verifie si le boutton est cliqué */
 if (isset($_POST['button'])) {
     if (
+
+
         /** Vérifie si les champs sont envoyés et qu'ils ne sont pas vides */
-        isset($photo, $nom, $postnom, $prenom, $sexe, $lieu, /*$date_de_naissance,*/ $adresse, $poste, $email, $phone) && !empty($photo
-            && !empty($nom)) && !empty($postnom) && !empty($prenom) && !empty($sexe) && !empty($lieu) && /*!empty($date_de_naissance)
+        isset($nom, $postnom, $prenom, $sexe, $lieu, /*$date_de_naissance,*/ $adresse, $poste, $email, $phone)
+        && !empty($nom) && !empty($postnom) && !empty($prenom) && !empty($sexe) && !empty($lieu) && /*!empty($date_de_naissance)
         &&*/ !empty($adresse) && !empty($poste) && !empty($email) && !empty($phone)
     ) {
+
         /** Variable de session content les erreurs émises par l'utilisateur */
         $_SESSION['error'] = [];
 
@@ -46,21 +52,22 @@ if (isset($_POST['button'])) {
         /** Vérifie si la variable de session est vide on insere les données entrées  à l'aide de 
          * la requete INSERT */
         if ($_SESSION['error'] === []) {
-            $insert = "INSERT INTO `agents`(`Photo`, `Nom`, `Postnom`, `Prenom`, `Sexe`, `Lieu`, /*`Naissance`,*/ `Adresse`,
-            `Poste`, `Email`, `Telephone`) VALUES(:Photo, :Nom, :Postnom, :Prenom, :Sexe, :Lieu, /*`:Naissance`,*/ :Adresse, 
+            $insert = "INSERT INTO `agents`(`Nom`, `Postnom`, `Prenom`, `Sexe`, `Lieu`, `Adresse`,
+            `Poste`, `Email`, `Telephone`) VALUES(:Nom, :Postnom, :Prenom, :Sexe, :Lieu, :Adresse, 
             :Poste, :Email, :Telephone)";
 
             $prepare = $pdo->prepare($insert);
 
             $execute = $prepare->execute(array(
-                ":Photo" => $photo, ":Nom" => $nom, ":Postnom" => $postnom, ":Prenom" => $prenom,
-                ":Sexe" => $sexe, ":Lieu" => $lieu, /*":Naissance" => $date_de_naissance,*/ ":Adresse" => $adresse, ":Poste" => $poste, ":Email" => $email, ":Telephone" => $phone
+                ":Nom" => $nom, ":Postnom" => $postnom, ":Prenom" => $prenom,
+                ":Sexe" => $sexe, ":Lieu" => $lieu, ":Adresse" => $adresse, ":Poste" => $poste, ":Email" => $email, ":Telephone" => $phone
             ));
+
+
 
             /** la session agent pour stocker les infos de l'agent exploitable sur tout le site */
 
             $_SESSION['agent'] = [
-                "photo" => file_get_contents($photo, FILE_USE_INCLUDE_PATH),
                 "nom" => $nom,
                 "postnom" => $postnom,
                 "prenom" => $prenom,
@@ -101,10 +108,6 @@ if (isset($_POST['button'])) {
         }
         ?>
         <div class="mb-3">
-            <label for="formFile" class="form-label">Photo</label>
-            <input class="form-control" type="file" id="formFile" name="photo">
-        </div>
-        <div class="mb-3">
             <label for="nom" class="form-label">Nom</label>
             <input type="text" class="form-control" id="nom" name="nom">
         </div>
@@ -125,12 +128,6 @@ if (isset($_POST['button'])) {
             <label for="lieu" class="form-label">Lieu de Naissance</label>
             <input type="text" class="form-control" id="lieu" name="lieu">
         </div>
-        <!-- 
-        <div class="mb-3">
-            <label for="birthday" class="form-label">Date de Naissance</label>
-            <input type="date" class="form-control" id="birthday" name="date">
-        </div>
-        -->
         <div class="mb-3">
             <label for="adresse" class="form-label">Residence</label>
             <input type="text" class="form-control" id="adresse" name="residence">
